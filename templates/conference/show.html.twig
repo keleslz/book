@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livre d'or de Conference {{ conference }}{% endblock %}
+
+{% block body %}
+    <h2>{{ conference }} Conference</h2>
+
+    <a class="btn " href="{{ path('admin') }}"><button>Retour à l'admin</button></a>
+    <div>
+        
+    {% if comments|length > 0 %}
+        {% for comment in comments  %}
+            {% if comment.photofilename %}
+                <img src="{{ asset('images/' ~ comment.photofilename) }}" />                
+            {% endif %}
+            <h4>{{ comment.author }}</h4>
+            <small>
+                {{ comment.createdAt|format_datetime('medium', 'short') }}
+            </small>
+
+            <p>{{ comment.text }}</p>
+        {% endfor %}
+
+        <div class="buttons">
+            {% if previous >= 0  %}
+                <a href="{{ path('conference', {id : conference.id, offset: previous }) }}">Precedent</a>
+            {% endif %}
+
+            {% if next < comments|length %}
+                <a href="{{ path('conference', {id : conference.id, offset: next }) }}">Suivant</a>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <div>Aucun commentaire n'a encore été posté pour cette conférence</div>
+    {% endif %}
+
+    </div>
+    <p>Ajouter un commentaire ?</p>
+{% endblock %}

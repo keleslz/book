@@ -47,4 +47,12 @@ class ConferenceRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function finAdll(): ?Conference
+    {
+        return $this->createQueryBuilder('*')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
