@@ -7,18 +7,36 @@
     
     <a class="btn " href="{{ path('admin') }}"><button>Retour à l'admin</button></a>
     
+    <div class="flash">
+        {% for messages in app.flashes  %}
+            {% for message in messages %}
+                <div class="alert alert-">
+                    <i>{{ message }}</i>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ form_start(commentForm, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_widget(commentForm) }}
+            <button type="submit">Commenter</button>
+        {{ form_end(commentForm) }}
+    </div>
+    
     {% for conference in conferences %}
         <div>
             <h4>Conference à {{ conference.city }} l'année : {{ conference.year }}</h4>
-            <p>
-                <a href="{{ path('conference', { id: conference.id }) }}">Voir</a>
-            </p>
+
             {% if conference.comments | length > 0 %}
                 <p>Actuellemnt {{ conference.comments | length }} commentaire</p>
             {% else %}
-                <p>N'a actuellement {{ conference.comments | length }} commentaire</p>
+                <p>La Conference de {{ conference.city }} n'a actuellement pas de commentaire</p>
             {% endif %}
 
+            <p>
+                <a href="{{ path('conference', { id: conference.id }) }}">Voir</a>
+            </p>
         </div>
     {% endfor %}
 {% endblock %}

@@ -6,6 +6,7 @@
     <h2>{{ conference }} Conference</h2>
 
     <a class="btn " href="{{ path('admin') }}"><button>Retour à l'admin</button></a>
+    <a href="{{ path('conferences') }}">Ajouter un commentaire ?</a>
     <div>
         
     {% if comments|length > 0 %}
@@ -36,5 +37,4 @@
     {% endif %}
 
     </div>
-    <p>Ajouter un commentaire ?</p>
 {% endblock %}
