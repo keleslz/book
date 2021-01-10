@@ -141,7 +141,6 @@ class Conference
         return $this;
     }
 
-    //TODO Ajoute de ca mais rien en marche
     public function computeSlug(SluggerInterface $slugger)
     {
         if(!$this->slug || '-' === $this->slug ) {

@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Conference;
-use App\Form\Type\CommentType;
+use App\Form\Type\CommentFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,27 +20,32 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conferences", name="conferences")
      */
-    public function index( Request $request, EntityManagerInterface $em): Response
+    public function index( Request $request, EntityManagerInterface $em, string $photoDir): Response
     {   
         $comment = new Comment();
 
-        $form = $this->createForm(CommentType::class, $comment);
+        $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $data = $form->getData();
-            $comment->setAuthor($data->getAuthor())
-                ->setText($data->getText())
-                ->setEmail($data->getEmail())
-                ->setConference($data->getConference())
-                // ->setCreatedAt(new DateTime('now'))
-                ->setPhotoFilename($data->getPhotoFilename())
-            ;
-            
+
+            if($photo = $form['photo']->getData())
+            {
+                $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
+
+                try {
+                    $photo->move($photoDir, $filename);
+                }catch(FileException $f) {
+                    $this->addFlash('error', "Error :  une erreur est survenue lors de l'enregistrement de l'image");
+                }
+                $comment->setPhotoFilename($filename);
+            }
+
             $em->persist($comment);
             $em->flush();
 
             $this->addFlash('success', 'Merci pour votre retour');
+            return $this->redirectToRoute('conferences');
         }
 
         return $this->render('conference/index.html.twig', [
@@ -54,7 +60,8 @@ class ConferenceController extends AbstractController
         Request $request,
         Environment $twig, 
         Conference $conference, 
-        CommentRepository $commentRepository): Response 
+        CommentRepository $commentRepository
+        ): Response 
     {
         // $comment->setAuthor()
 

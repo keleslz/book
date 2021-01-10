@@ -26,14 +26,12 @@
             <h4>Conference à {{ conference.city }} l'année : {{ conference.year }}</h4>
 
             {% if conference.comments | length > 0 %}
-                <p>Actuellemnt {{ conference.comments | length }} commentaire</p>
+                <a href="{{ path('conference', { slug: conference.slug }) }}"><p>Actuellement {{ conference.comments | length }} commentaire</p></a>
             {% else %}
-                <p>La Conference de {{ conference.city }} n'a actuellement pas de commentaire</p>
+                
+                <a href="{{ path('conference', { slug: conference.slug }) }}"><p>La Conference de {{ conference.city }} n'a actuellement pas de commentaire</p></a>
             {% endif %}
 
-            <p>
-                <a href="{{ path('conference', { slug: conference.slug }) }}">Voir</a>
-            </p>
         </div>
     {% endfor %}
 {% endblock %}
