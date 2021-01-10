@@ -4,9 +4,7 @@
 
 {% block body %}
     <h2>Donnez votre feedback!</h2>
-    
-    <a class="btn " href="{{ path('admin') }}"><button>Retour à l'admin</button></a>
-    
+        
     <div class="flash">
         {% for messages in app.flashes  %}
             {% for message in messages %}
@@ -23,7 +21,6 @@
             <button type="submit">Commenter</button>
         {{ form_end(commentForm) }}
     </div>
-    
     {% for conference in conferences %}
         <div>
             <h4>Conference à {{ conference.city }} l'année : {{ conference.year }}</h4>
@@ -35,7 +32,7 @@
             {% endif %}
 
             <p>
-                <a href="{{ path('conference', { id: conference.id }) }}">Voir</a>
+                <a href="{{ path('conference', { slug: conference.slug }) }}">Voir</a>
             </p>
         </div>
     {% endfor %}

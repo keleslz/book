@@ -7,7 +7,6 @@ use App\Entity\Conference;
 use App\Form\Type\CommentType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,13 +19,12 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conferences", name="conferences")
      */
-    public function index( Request $request, ConferenceRepository $conferenceRepository, EntityManagerInterface $em): Response
+    public function index( Request $request, EntityManagerInterface $em): Response
     {   
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             
             $data = $form->getData();
@@ -34,24 +32,23 @@ class ConferenceController extends AbstractController
                 ->setText($data->getText())
                 ->setEmail($data->getEmail())
                 ->setConference($data->getConference())
-                ->setCreatedAt(new DateTime('now'))
+                // ->setCreatedAt(new DateTime('now'))
                 ->setPhotoFilename($data->getPhotoFilename())
             ;
             
             $em->persist($comment);
             $em->flush();
 
-            $this->addFlash('success', 'Merci pour retour');
+            $this->addFlash('success', 'Merci pour votre retour');
         }
 
         return $this->render('conference/index.html.twig', [
-            'conferences' => $conferenceRepository->findAll(),
             'commentForm' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/conference/{id}", name="conference")
+     * @Route("/conference/{slug}", name="conference")
      */
     public function show(
         Request $request,

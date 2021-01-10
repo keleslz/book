@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Entity\Conference;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CommentRepository; 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -97,6 +99,15 @@ class Comment
         return $this;
     }
     
+    /**
+     * Call this callback func to set current datetime when entity was persist
+     * @ORM\PrePersist()
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \Datetime();
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;

@@ -26,8 +26,15 @@ class ConferenceCrudController extends AbstractCrudController
 
         return $actions::new()
         ->add(Crud::PAGE_INDEX, Action::NEW)
+        ->add(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER)
+        ->add(Crud::PAGE_NEW, Action::SAVE_AND_RETURN)
+
         ->add(Crud::PAGE_INDEX, Action::EDIT)
+        ->add(Crud::PAGE_EDIT, Action::SAVE_AND_ADD_ANOTHER)
+        ->add(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN)
+
         ->add(Crud::PAGE_INDEX, Action::DELETE)
+        
         // ->setPermission(Action::NEW, 'ROLE_SUPER_ADMIN')
         // ->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN')
         // ->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN')

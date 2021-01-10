@@ -6,7 +6,20 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block header %}
+            <header>
+                <h1><a href="{{ path('admin') }}">Livre d'or</a></h1>
+                <a class="" href="{{ path('admin') }}">Retour à l'admin</a>
+                <ul>
+                    {% for conference in conferences %}
+                        <li><a href="{{ path('conference', { slug: conference.slug }) }}">{{ conference }}</a></li>                        
+                    {% endfor %}
+                </ul>
+            </header>
+        {% endblock %}
+        {% block body %}
+
+        {% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>
