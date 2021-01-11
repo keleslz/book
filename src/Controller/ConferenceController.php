@@ -7,6 +7,7 @@ use App\Entity\Conference;
 use App\Form\Type\CommentFormType;
 use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
+use App\SpamChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -20,7 +21,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/conferences", name="conferences")
      */
-    public function index( Request $request, EntityManagerInterface $em, string $photoDir): Response
+    public function index( Request $request, EntityManagerInterface $em, string $photoDir, SpamChecker $spamChecker): Response
     {   
         $comment = new Comment();
 
@@ -42,6 +43,20 @@ class ConferenceController extends AbstractController
             }
 
             $em->persist($comment);
+            /*
+                $context = [
+                    'user_ip' => $request->getClientIp(),
+                    'user_agent' => $request->headers->get('user_agent'),
+                    'refferer' => $request->headers->get('referer'),
+                    'permalink' => $request->getUri()
+                ];
+
+                spam checker, said blog value is empty maybe must try online
+                if($spamChecker->getSpamScore($comment, $context) === 2)
+                {   
+                    throw new \RuntimeException('Pur spam, allez vous en');
+                }
+            */
             $em->flush();
 
             $this->addFlash('success', 'Merci pour votre retour');
